@@ -5,8 +5,8 @@ module StorefrontAPI
   module GraphQL
     class Railtie < Rails::Railtie
       initializer 'storefront_api.initialize_graphql_clients' do |app|
-        ShopifyAPI::GraphQL.schema_location = app.root.join('db', StorefrontAPI::GraphQL.schema_location)
-        ShopifyAPI::GraphQL.initialize_clients
+        StorefrontAPI::GraphQL.schema_location = app.root.join('db', StorefrontAPI::GraphQL.schema_location)
+        StorefrontAPI::GraphQL.initialize_clients
       end
 
       rake_tasks do

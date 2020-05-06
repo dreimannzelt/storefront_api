@@ -4,8 +4,10 @@ require 'shopify_api/graphql/http_client'
 
 module StorefrontAPI
   module GraphQL
-    include ShopifyAPI::GraphQL
     DEFAULT_SCHEMA_LOCATION_PATH = Pathname('shopify_storefront_graphql_schemas')
+
+    InvalidSchema = Class.new(StandardError)
+    InvalidClient = Class.new(StandardError)
 
     class << self
       delegate :parse, :query, to: :client
@@ -31,6 +33,50 @@ module StorefrontAPI
             @_client_cache[api_version]
           end
         end
+      end
+
+      def clear_clients
+        @_client_cache = {}
+      end
+
+      def initialize_clients(raise_on_invalid_schema: true)
+        initialize_client_cache
+
+        Dir.glob(schema_location.join("*.json")).each do |schema_file|
+          schema_file = Pathname(schema_file)
+          matches = schema_file.basename.to_s.match(/^#{ShopifyAPI::ApiVersion::HANDLE_FORMAT}\.json$/)
+
+          if matches
+            api_version = ShopifyAPI::ApiVersion.new(handle: matches[1])
+          else
+            if raise_on_invalid_schema
+              raise InvalidSchema, "Invalid schema file name `#{schema_file}`. Does not match format of: `<version>.json`."
+            else
+              next
+            end
+          end
+
+          schema = ::GraphQL::Client.load_schema(schema_file.to_s)
+          client = ::GraphQL::Client.new(schema: schema, execute: HTTPClient.new(api_version)).tap do |c|
+            c.allow_dynamic_queries = true
+          end
+
+          @_client_cache[api_version.handle] = client
+        end
+      end
+
+      def schema_location
+        @schema_location || DEFAULT_SCHEMA_LOCATION_PATH
+      end
+
+      def schema_location=(path)
+        @schema_location = Pathname(path)
+      end
+
+      private
+
+      def initialize_client_cache
+        @_client_cache ||= {}
       end
     end
   end
