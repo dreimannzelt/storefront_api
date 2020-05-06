@@ -1,0 +1,70 @@
+PATH
+  remote: .
+  specs:
+    storefront_api (0.1.0)
+      shopify_api (~> 9.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (6.0.2.2)
+      activesupport (= 6.0.2.2)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
+    activeresource (5.1.1)
+      activemodel (>= 5.0, < 7)
+      activemodel-serializers-xml (~> 1.0)
+      activesupport (>= 5.0, < 7)
+    activesupport (6.0.2.2)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 0.7, < 2)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+      zeitwerk (~> 2.2)
+    builder (3.2.4)
+    concurrent-ruby (1.1.6)
+    diff-lcs (1.3)
+    graphql (1.10.9)
+    graphql-client (0.16.0)
+      activesupport (>= 3.0)
+      graphql (~> 1.8)
+    i18n (1.8.2)
+      concurrent-ruby (~> 1.0)
+    minitest (5.14.0)
+    rack (2.2.2)
+    rake (10.5.0)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
+    rspec-expectations (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-mocks (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-support (3.9.3)
+    shopify_api (9.1.0)
+      activeresource (>= 4.1.0, < 6.0.0)
+      graphql-client
+      rack
+    thread_safe (0.3.6)
+    tzinfo (1.2.7)
+      thread_safe (~> 0.1)
+    zeitwerk (2.3.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.17)
+  rake (~> 10.0)
+  rspec (~> 3.0)
+  storefront_api!
+
+BUNDLED WITH
+   1.17.3
