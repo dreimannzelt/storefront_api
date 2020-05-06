@@ -5,7 +5,7 @@ require "storefront_api/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "storefront_api"
-  spec.version       = StorefrontApi::VERSION
+  spec.version       = StorefrontAPI::VERSION
   spec.authors       = ["Björn Wolf"]
   spec.email         = ["bjoern@dreimannzelt.de"]
 

@@ -1,6 +1,6 @@
 require "storefront_api/version"
 
-module StorefrontApi
+module StorefrontAPI
   class Error < StandardError; end
   # Your code goes here...
 end

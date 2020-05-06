@@ -1,6 +1,6 @@
-RSpec.describe StorefrontApi do
+RSpec.describe StorefrontAPI do
   it "has a version number" do
-    expect(StorefrontApi::VERSION).not_to be nil
+    expect(StorefrontAPI::VERSION).not_to be nil
   end
 
   it "does something useful" do
