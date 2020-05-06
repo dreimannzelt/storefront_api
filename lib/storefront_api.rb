@@ -1,6 +1,9 @@
-require "storefront_api/version"
+$:.unshift File.dirname(__FILE__)
+require 'storefront_api/version'
 
 module StorefrontAPI
   class Error < StandardError; end
-  # Your code goes here...
 end
+
+require 'storefront_api/graphql'
+require 'storefront_api/graphql/railtie' if defined?(Rails)
