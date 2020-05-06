@@ -3,7 +3,8 @@ require 'graphql/client'
 require 'shopify_api/graphql/http_client'
 
 module StorefrontAPI
-  module GraphQL < ShopifyAPI::GraphQL
+  module GraphQL
+    include ShopifyAPI::GraphQL
     DEFAULT_SCHEMA_LOCATION_PATH = Pathname('shopify_storefront_graphql_schemas')
 
     class << self
