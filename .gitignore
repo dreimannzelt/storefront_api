@@ -9,3 +9,4 @@
 
 # rspec failure tracking
 .rspec_status
+/shopify_storefront_graphql_schemas
