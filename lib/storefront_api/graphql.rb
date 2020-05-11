@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-require 'graphql/client'
-require 'shopify_api/graphql/http_client'
+require 'storefront_api/graphql/http_client'
 
 module StorefrontAPI
   module GraphQL
