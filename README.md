@@ -1,3 +1,5 @@
+**WARNING**: *This is WIP and used by a custom Rails app for a customer. This is by no means production ready or meant to. If you still want to use it and contribute, please feel free to. We are are open for any suggestions and feedback!*
+
 # StorefrontAPI
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/storefront_api`. To experiment with that code, run `bin/console` for an interactive prompt.
