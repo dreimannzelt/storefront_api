@@ -1,138 +1,59 @@
 module StorefrontAPI
   class Product < Base
-    FindByHandleQuery = <<~GRAPHQL
-      query($handle: String!) {
-        productByHandle(handle: $handle) {
-          id
-          handle
-          title
-          description
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-            maxVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-          variants(first: 1) {
-            edges {
-              node {
-                id
-                title
-              }
-            }
-          }
-          images(first: 5) {
-            edges {
-              node {
-                transformedSrc(maxWidth: 1234)
-              }
-            }
-          }
-          collections(first: 1) {
-            edges {
-              node {
-                id
-                handle
-                title
-              }
-            }
-          }
-          availableForSale
-        }
-      }
-    GRAPHQL
-
-    SearchQuery = <<~GRAPHQL
-      query($query: String!) {
-        products(query: $query, first: 4) {
-          edges {
-            node {
-              id
-              handle
-              title
-              description
-              priceRange {
-                minVariantPrice {
-                  amount
-                  currencyCode
-                }
-                maxVariantPrice {
-                  amount
-                  currencyCode
-                }
-              }
-              variants(first: 1) {
-                edges {
-                  node {
-                    id
-                    title
-                  }
-                }
-              }
-              images(first: 5) {
-                edges {
-                  node {
-                    transformedSrc(maxWidth: 1234)
-                  }
-                }
-              }
-              collections(first: 1) {
-                edges {
-                  node {
-                    id
-                    handle
-                    title
-                  }
-                }
-              }
-              availableForSale
-            }
-          }
-        }
-      }
-    GRAPHQL
-
     #=== Class Methods
 
     class << self
-      def find_by_handle(handle)
-        new(
+      def all(per_page: 50, cursor: nil)
+        Pagination.new(
           query(
-            FindByHandleQuery, 
+            Queries::Product::AllQuery,
+            variables: {
+              perPage: per_page
+            }
+          ).data.products,
+          Product,
+        )
+      end
+
+      def find(handle)
+        new(
+          query!(
+            Queries::Product::FindByHandleQuery, 
             variables: { 
               handle: handle
-            }
-          ).data.product_by_handle
+            },
+            required_node: :product_by_handle
+          )
         )
       end
 
       def search(term)
         query(
-          SearchQuery,
+          Queries::Product::SearchQuery,
           variables: {
             query: term
           }
-        ).data.products.edges.map do |product_connection|
-          new(
-            product_connection
-          )
-        end
+        )
       end
     end
 
     #=== Instance Methods
 
     delegate :id,
-            :title, 
-            :handle,
-            :description,
-            :available_for_sale,
-            :price_range,
-            to: :data
+             :title, 
+             :handle,
+             :description,
+             :available_for_sale,
+             :price_range,
+             to: :data
+
+    def price
+      self.price_range.min_variant_price.amount
+    end
+
+    def currency
+      self.price_range.min_variant_price.currency_code
+    end
 
     def variants
       self.data.variants.edges.map do |product_variant_connection|
@@ -147,11 +68,10 @@ module StorefrontAPI
     end
 
     def images
-      self.data.images.edges.map do |image_connection|
-        Storefront::Image.new(
-          image_connection.node
-        )
-      end
+      Pagination.new(
+        self.data.images,
+        Image
+      )
     end
 
     def collection_handle

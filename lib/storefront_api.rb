@@ -3,11 +3,12 @@ $:.unshift File.dirname(__FILE__)
 require 'active_resource'
 require 'active_support/core_ext/class/attribute_accessors'
 require 'storefront_api/version'
+require 'storefront_api/pagination'
 
 module StorefrontAPI
   class Error < StandardError; end
+  class RequiredNodeEmpty < StandardError; end
 end
-
 
 require 'storefront_api/resources'
 

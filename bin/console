@@ -1,14 +1,63 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
+require "shopify_api"
 require "storefront_api"
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
+
+shop_url = "https://#{ENV["SHOPIFY_ADMIN_API_KEY"]}:#{ENV["SHOPIFY_ADMIN_PASSWORD"]}@#{ENV["SHOPIFY_SHOP_NAME"]}.myshopify.com"
+ShopifyAPI::Base.site = shop_url
+ShopifyAPI::Base.api_version = '2020-04'
+StorefrontAPI::Base.token = ENV["SHOPIFY_STOREFRONT_API_TOKEN"]
+
+StorefrontAPI::GraphQL.initialize_clients
+require "storefront_api/queries"
 
 # (If you use this, don't forget to add pry to your Gemfile!)
 # require "pry"
 # Pry.start
 
 require "irb"
+require "irb/completion"
+
+puts "----"
+puts "# Test model naming"
+product = StorefrontAPI::Product.find('blouse-bill-test')
+puts product.model_name
+puts product.to_model
+
+puts "----"
+puts "# Test resource retrieval of non existing product"
+begin
+  product = StorefrontAPI::Product.find('fake-product')
+rescue StorefrontAPI::RequiredNodeEmpty => e
+  puts "Yes, correctly raised exception"
+  puts e.inspect
+end
+
+
+puts "----"
+puts "Test resource pagination"
+@products = StorefrontAPI::Product.all(per_page: 1)
+puts "Products size: #{@products.size}"
+@products.each do |product|
+  puts [
+    product.title, 
+    product.images.first.src
+  ].join(': ')
+end
+puts "Has next page? => #{@products.has_next_page?}"
+puts "Whats the last cursor? => #{@products.last_cursor}"
+
+puts "--"
+@products = StorefrontAPI::Product.all(per_page: 2)
+puts "Products size: #{@products.size}"
+@products.each do |product|
+  puts [product.id, product.title].join(': ')
+end
+puts "Has next page? => #{@products.has_next_page?}"
+
+
 IRB.start(__FILE__)
